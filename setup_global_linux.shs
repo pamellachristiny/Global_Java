@@ -1,0 +1,44 @@
+#!/bin/bash
+
+echo "==============================================="
+echo "   SETUP GLOBAL SOLUTION - LINUX"
+echo "   Java 17 + Maven + Oracle + Quarkus"
+echo "==============================================="
+
+sudo apt update
+
+echo ">> Instalando JDK 17..."
+sudo apt install -y openjdk-17-jdk
+
+echo ">> Instalando Maven..."
+sudo apt install -y maven
+
+echo ">> Instalando dependências do Oracle Client..."
+sudo apt install -y libaio1 wget unzip
+
+echo ">> Download do Oracle Instant Client..."
+wget https://download.oracle.com/otn_software/linux/instantclient/217000/instantclient-basiclite-linux.x64-21.7.0.0.0.zip -O oracle.zip
+
+echo ">> Extraindo..."
+unzip oracle.zip -d ~/oracle_client
+
+echo ">> Configurando variáveis do Oracle..."
+echo "export ORACLE_HOME=$HOME/oracle_client/instantclient_21_7" >> ~/.bashrc
+echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$ORACLE_HOME" >> ~/.bashrc
+echo "export PATH=\$PATH:\$ORACLE_HOME" >> ~/.bashrc
+
+echo ">> Configurando variáveis da API..."
+echo 'export ORACLE_URL="jdbc:oracle:thin:@SEU-HOST:1521:ORCL"' >> ~/.bashrc
+echo 'export ORACLE_USER="SEU_USUARIO"' >> ~/.bashrc
+echo 'export ORACLE_PASSWORD="SUA_SENHA"' >> ~/.bashrc
+
+echo ">> Criando comando runapi..."
+echo 'alias runapi="mvn -DskipTests package && java -jar target/quarkus-app/quarkus-run.jar"' >> ~/.bashrc
+
+echo "==============================================="
+echo "   SETUP CONCLUÍDO!"
+echo "   Feche o terminal e abra novamente."
+echo "   Depois rode: runapi"
+echo "==============================================="
+
+
